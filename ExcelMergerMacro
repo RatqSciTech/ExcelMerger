@@ -1,11 +1,12 @@
 Sub MergeExcelFiles()
     Dim fnameList, fnameCurFile As Variant
     Dim countFiles, countSheets As Integer
+    Dim newSheetName As String
     Dim wksCurSheet As Worksheet
     Dim wbkCurBook, wbkSrcBook As Workbook
- 
+
     fnameList = Application.GetOpenFilename(FileFilter:="Microsoft Excel Workbooks (*.xls;*.xlsx;*.xlsm),*.xls;*.xlsx;*.xlsm", Title:="Choose Excel files to merge", MultiSelect:=True)
- 
+    
     If (vbBoolean <> VarType(fnameList)) Then
  
         If (UBound(fnameList) > 0) Then
@@ -28,8 +29,11 @@ Sub MergeExcelFiles()
                   Else
                   
                     countSheets = countSheets + 1
-                  
-                    
+                    newSheetName = wksCurSheet.Name & "-" & Left(wbkSrcBook.Name, InStr(wbkSrcBook.Name, ".") - 1)
+                    If (Len(newSheetName) > 31) Then
+                    newSheetName = Left(newSheetName, 31)
+                    End If
+                    wksCurSheet.Name = newSheetName
                     wksCurSheet.Copy after:=wbkCurBook.Sheets(wbkCurBook.Sheets.Count)
                       End If
                       
